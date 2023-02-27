@@ -19,7 +19,7 @@ export function Transactions() {
         <TransactionsTable>
           <tbody>
             <tr>
-              <td width="40%">Desenvolvimento de site</td>
+              <td width="30%">Desenvolvimento de site</td>
 
               <td>
                 <PriceHighLight variant="income">R$ 12.000,00</PriceHighLight>
@@ -28,9 +28,11 @@ export function Transactions() {
               <td>Venda</td>
 
               <td>13/04/2022</td>
+
+              <td>Eduardo Soares</td>
             </tr>
             <tr>
-              <td width="40%">Desenvolvimento de site</td>
+              <td width="30%">Desenvolvimento de site</td>
 
               <td>
                 <PriceHighLight variant="income">R$ 12.000,00</PriceHighLight>
@@ -39,9 +41,11 @@ export function Transactions() {
               <td>Venda</td>
 
               <td>13/04/2022</td>
+
+              <td>Eduardo Soares</td>
             </tr>
             <tr>
-              <td width="40%">Desenvolvimento de site</td>
+              <td width="30%">Desenvolvimento de site</td>
 
               <td>
                 <PriceHighLight variant="outcome">
@@ -52,6 +56,8 @@ export function Transactions() {
               <td>Venda</td>
 
               <td>13/04/2022</td>
+
+              <td>Eduardo Soares</td>
             </tr>
           </tbody>
         </TransactionsTable>
