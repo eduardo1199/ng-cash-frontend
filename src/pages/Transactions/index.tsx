@@ -3,6 +3,7 @@ import { Header } from '../../components/Header'
 import { SearchForm } from '../../components/Search'
 import { Summary } from '../../components/Summary'
 import { TransactionContext } from '../../context/TransactionsContext'
+import { formatCurrencyNumber } from '../../utils'
 import {
   PriceHighLight,
   TransactionsContainer,
@@ -29,10 +30,7 @@ export function Transactions() {
 
                   <td>
                     <PriceHighLight variant={transaction.type}>
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      }).format(transaction.price)}
+                      {formatCurrencyNumber(transaction.price)}
                     </PriceHighLight>
                   </td>
 
