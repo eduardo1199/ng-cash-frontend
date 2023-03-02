@@ -3,6 +3,7 @@ import { Header } from '../../components/Header'
 import { SearchForm } from '../../components/Search'
 import { Summary } from '../../components/Summary'
 import { TransactionContext } from '../../context/TransactionsContext'
+import { priceFormatter, dateFormatter } from '../../utils/formatter'
 import {
   PriceHighLight,
   TransactionsContainer,
@@ -29,16 +30,17 @@ export function Transactions() {
 
                   <td>
                     <PriceHighLight variant={transaction.type}>
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      }).format(transaction.price)}
+                      {transaction.type === 'outcome' && '- '}
+                      {transaction.type === 'income' && '+ '}
+                      {priceFormatter.format(transaction.price)}
                     </PriceHighLight>
                   </td>
 
                   <td>{transaction.category}</td>
 
-                  <td>{transaction.createdAt}</td>
+                  <td>
+                    {dateFormatter.format(new Date(transaction.createdAt))}
+                  </td>
 
                   <td>Eduardo Soares</td>
                 </tr>
