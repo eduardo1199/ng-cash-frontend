@@ -1,6 +1,8 @@
+import { useContext } from 'react'
 import { Header } from '../../components/Header'
 import { SearchForm } from '../../components/Search'
 import { Summary } from '../../components/Summary'
+import { TransactionContext } from '../../context/TransactionsContext'
 import {
   PriceHighLight,
   TransactionsContainer,
@@ -8,6 +10,8 @@ import {
 } from './styles'
 
 export function Transactions() {
+  const { transactions } = useContext(TransactionContext)
+
   return (
     <div>
       <Header />
@@ -18,47 +22,28 @@ export function Transactions() {
 
         <TransactionsTable>
           <tbody>
-            <tr>
-              <td width="30%">Desenvolvimento de site</td>
+            {transactions.map((transaction) => {
+              return (
+                <tr key={transaction.id}>
+                  <td width="30%">{transaction.description}</td>
 
-              <td>
-                <PriceHighLight variant="income">R$ 12.000,00</PriceHighLight>
-              </td>
+                  <td>
+                    <PriceHighLight variant={transaction.type}>
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }).format(transaction.price)}
+                    </PriceHighLight>
+                  </td>
 
-              <td>Venda</td>
+                  <td>{transaction.category}</td>
 
-              <td>13/04/2022</td>
+                  <td>{transaction.createdAt}</td>
 
-              <td>Eduardo Soares</td>
-            </tr>
-            <tr>
-              <td width="30%">Desenvolvimento de site</td>
-
-              <td>
-                <PriceHighLight variant="income">R$ 12.000,00</PriceHighLight>
-              </td>
-
-              <td>Venda</td>
-
-              <td>13/04/2022</td>
-
-              <td>Eduardo Soares</td>
-            </tr>
-            <tr>
-              <td width="30%">Desenvolvimento de site</td>
-
-              <td>
-                <PriceHighLight variant="outcome">
-                  - R$ 12.000,00
-                </PriceHighLight>
-              </td>
-
-              <td>Venda</td>
-
-              <td>13/04/2022</td>
-
-              <td>Eduardo Soares</td>
-            </tr>
+                  <td>Eduardo Soares</td>
+                </tr>
+              )
+            })}
           </tbody>
         </TransactionsTable>
       </TransactionsContainer>
