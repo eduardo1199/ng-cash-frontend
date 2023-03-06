@@ -8,7 +8,7 @@ import {
   TransactionsTypeButton,
 } from './styles'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const newTransactionsFormSchema = z.object({
@@ -24,9 +24,13 @@ export function NewTransactionModal() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { isSubmitted },
   } = useForm<NewTransactionSchemaFormType>({
     resolver: zodResolver(newTransactionsFormSchema),
+    defaultValues: {
+      type: 'income',
+    },
   })
 
   function handleCreateNewTransaction(data: NewTransactionSchemaFormType) {
@@ -64,16 +68,27 @@ export function NewTransactionModal() {
             {...register('category')}
           />
 
-          <TransactionsType>
-            <TransactionsTypeButton variant="income" value="income">
-              <ArrowCircleUp size={24} />
-              Guardar
-            </TransactionsTypeButton>
-            <TransactionsTypeButton variant="outcome" value="outcome">
-              <ArrowCircleDown size={24} />
-              Transferir
-            </TransactionsTypeButton>
-          </TransactionsType>
+          <Controller
+            control={control}
+            name="type"
+            render={(props) => {
+              return (
+                <TransactionsType
+                  onValueChange={props.field.onChange}
+                  value={props.field.value}
+                >
+                  <TransactionsTypeButton variant="income" value="income">
+                    <ArrowCircleUp size={24} />
+                    Guardar
+                  </TransactionsTypeButton>
+                  <TransactionsTypeButton variant="outcome" value="outcome">
+                    <ArrowCircleDown size={24} />
+                    Transferir
+                  </TransactionsTypeButton>
+                </TransactionsType>
+              )
+            }}
+          />
 
           <button type="submit" disabled={isSubmitted}>
             Cadastrar
