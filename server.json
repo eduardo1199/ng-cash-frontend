@@ -31,6 +31,22 @@
       "category": "Equipamento",
       "price": 400,
       "createdAt": "2023-03-03T10:08:25.783Z"
+    },
+    {
+      "category": "Fatura do cartão",
+      "type": "outcome",
+      "description": "Fatura ",
+      "price": 5000,
+      "createdAt": "2023-03-06T19:13:16.839Z",
+      "id": 5
+    },
+    {
+      "category": "alimentação",
+      "type": "outcome",
+      "description": "Chocolate cacau",
+      "price": 10,
+      "createdAt": "2023-03-06T19:28:23.724Z",
+      "id": 6
     }
   ]
 }

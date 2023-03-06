@@ -8,8 +8,10 @@ import {
   TransactionsTypeButton,
 } from './styles'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useContext } from 'react'
+import { TransactionContext } from '../../context/TransactionsContext'
 
 const newTransactionsFormSchema = z.object({
   description: z.string(),
@@ -24,13 +26,28 @@ export function NewTransactionModal() {
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { isSubmitted },
   } = useForm<NewTransactionSchemaFormType>({
     resolver: zodResolver(newTransactionsFormSchema),
+    defaultValues: {
+      type: 'income',
+    },
   })
 
-  function handleCreateNewTransaction(data: NewTransactionSchemaFormType) {
-    console.log(data)
+  const { createTransaction } = useContext(TransactionContext)
+
+  async function handleCreateNewTransaction(
+    data: NewTransactionSchemaFormType,
+  ) {
+    const newTransaction = {
+      ...data,
+    }
+
+    await createTransaction(newTransaction)
+
+    reset()
   }
 
   return (
@@ -64,16 +81,27 @@ export function NewTransactionModal() {
             {...register('category')}
           />
 
-          <TransactionsType>
-            <TransactionsTypeButton variant="income" value="income">
-              <ArrowCircleUp size={24} />
-              Guardar
-            </TransactionsTypeButton>
-            <TransactionsTypeButton variant="outcome" value="outcome">
-              <ArrowCircleDown size={24} />
-              Transferir
-            </TransactionsTypeButton>
-          </TransactionsType>
+          <Controller
+            control={control}
+            name="type"
+            render={(props) => {
+              return (
+                <TransactionsType
+                  onValueChange={props.field.onChange}
+                  value={props.field.value}
+                >
+                  <TransactionsTypeButton variant="income" value="income">
+                    <ArrowCircleUp size={24} />
+                    Guardar
+                  </TransactionsTypeButton>
+                  <TransactionsTypeButton variant="outcome" value="outcome">
+                    <ArrowCircleDown size={24} />
+                    Transferir
+                  </TransactionsTypeButton>
+                </TransactionsType>
+              )
+            }}
+          />
 
           <button type="submit" disabled={isSubmitted}>
             Cadastrar
