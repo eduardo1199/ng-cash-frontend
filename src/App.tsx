@@ -1,15 +1,16 @@
 import { ThemeProvider } from 'styled-components'
 import { TransactionsProvider } from './context/TransactionsContext'
-import { Transactions } from './pages/Transactions'
+import { RouterProvider } from 'react-router-dom'
 import { GlobalStyle } from './styles/global'
 
 import { defaultTheme } from './styles/themes/default'
+import { router } from './routes'
 
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <TransactionsProvider>
-        <Transactions />
+        <RouterProvider router={router} />
       </TransactionsProvider>
 
       <GlobalStyle />
