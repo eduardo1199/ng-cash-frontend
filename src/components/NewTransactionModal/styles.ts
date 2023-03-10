@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import * as Dialog from '@radix-ui/react-dialog'
 import * as RadioGroup from '@radix-ui/react-radio-group'
+import * as Select from '@radix-ui/react-select'
 
 export const Overlay = styled(Dialog.Overlay)`
   position: fixed;
@@ -121,4 +122,13 @@ export const TransactionsTypeButton = styled(
       color: ${(props) => props.theme.white};
     }
   }
+`
+
+export const ContentSelect = styled(Select.Content)`
+  position: fixed;
+  top: 56%;
+  left: 39%;
+
+  background-color: ${(props) => props.theme['gray-600']};
+  width: 22%;
 `
