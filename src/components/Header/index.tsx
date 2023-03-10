@@ -7,11 +7,17 @@ import {
 } from './styles'
 
 import * as Dialog from '@radix-ui/react-dialog'
-
+import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.svg'
 import { NewTransactionModal } from '../NewTransactionModal'
 
 export function Header() {
+  const navigator = useNavigate()
+
+  function handleLogout() {
+    navigator('/')
+  }
+
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -26,7 +32,9 @@ export function Header() {
             <NewTransactionModal />
           </Dialog.Root>
 
-          <LogoutButton>Sair</LogoutButton>
+          <LogoutButton type="button" onClick={handleLogout}>
+            Sair
+          </LogoutButton>
         </ContainerButton>
       </HeaderContent>
     </HeaderContainer>
