@@ -31,3 +31,28 @@ export const NewTransactionsButton = styled.button`
     transition: background-color 0.2s;
   }
 `
+export const ContainerButton = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+export const LogoutButton = styled.button`
+  border: 0;
+  padding: 0 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: ${(props) => props.theme['gray-600']};
+  color: ${(props) => props.theme.white};
+  font-weight: bold;
+
+  &:hover {
+    background: ${(props) => props.theme['gray-700']};
+    transition: background-color 0.2s;
+  }
+
+  :focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px ${(props) => props.theme['gray-700']};
+  }
+`

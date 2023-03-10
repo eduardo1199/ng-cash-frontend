@@ -1,8 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
+import * as Select from '@radix-ui/react-select'
+import { ArrowCircleDown, ArrowCircleUp, X, CaretDown } from 'phosphor-react'
 import {
   CloseButton,
   Content,
+  ContentSelect,
   Overlay,
   TransactionsType,
   TransactionsTypeButton,
@@ -85,6 +87,30 @@ export function NewTransactionModal() {
             required
             {...register('category')}
           />
+
+          <Select.Root>
+            <Select.Trigger>
+              <Select.Value placeholder="Selecione um usuário..." />
+              <Select.Icon>
+                <CaretDown size={14} />
+              </Select.Icon>
+            </Select.Trigger>
+
+            <Select.Portal>
+              <ContentSelect>
+                <Select.ScrollUpButton>
+                  <CaretDown size={14} />
+                </Select.ScrollUpButton>
+                <Select.Viewport>
+                  <Select.Item value="1">Valor 1</Select.Item>
+                  <Select.Separator />
+                  <Select.Item value="2">Valor 2</Select.Item>
+                </Select.Viewport>
+                <Select.ScrollDownButton />
+                <Select.Arrow />
+              </ContentSelect>
+            </Select.Portal>
+          </Select.Root>
 
           <Controller
             control={control}
