@@ -15,18 +15,6 @@ export const Container = styled.div`
     flex-direction: column;
     gap: 1rem;
 
-    input {
-      border-radius: 6px;
-      border: 0;
-      background: ${(props) => props.theme['gray-900']};
-      color: ${(props) => props.theme['gray-300']};
-      padding: 1rem;
-
-      ::placeholder {
-        color: ${(props) => props.theme['gray-500']};
-      }
-    }
-
     button[type='submit'] {
       height: 58px;
       border: 0;
@@ -47,6 +35,29 @@ export const Container = styled.div`
         transition: background-color 0.2s;
       }
     }
+  }
+`
+
+interface InputProps {
+  invalid: boolean
+}
+
+export const Input = styled.input<InputProps>`
+  border-radius: 6px;
+  border: 0;
+  background: ${(props) => props.theme['gray-900']};
+  color: ${(props) => props.theme['gray-300']};
+  padding: 1rem;
+
+  ::placeholder {
+    color: ${(props) => props.theme['gray-500']};
+  }
+
+  :focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px
+      ${(props) =>
+        props.invalid ? props.theme['red-500'] : props.theme['green-500']};
   }
 `
 
