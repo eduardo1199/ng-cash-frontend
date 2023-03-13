@@ -5,13 +5,16 @@ import { GlobalStyle } from './styles/global'
 
 import { defaultTheme } from './styles/themes/default'
 import { router } from './routes'
+import { SessionContextProvider } from './context/SessionContext'
 
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <TransactionsProvider>
-        <RouterProvider router={router} />
-      </TransactionsProvider>
+      <SessionContextProvider>
+        <TransactionsProvider>
+          <RouterProvider router={router} />
+        </TransactionsProvider>
+      </SessionContextProvider>
 
       <GlobalStyle />
     </ThemeProvider>
