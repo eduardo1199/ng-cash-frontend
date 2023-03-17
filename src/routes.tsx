@@ -16,20 +16,20 @@ interface ProtectedRouterProps {
 }
 
 function ProtectedRouter({ children }: ProtectedRouterProps) {
-  const { session, handleSetSessionId } = useContext(SessionContext)
+  const cookie = new Cookie()
+
+  const sessionId = cookie.get('@ng-cash:sessionId')
+
+  const { handleSetSessionId } = useContext(SessionContext)
   const location = useLocation()
 
   useEffect(() => {
-    const cookie = new Cookie()
-
-    const sessionId = cookie.get('@ng-cash:sessionId')
-
     if (sessionId) {
       handleSetSessionId(sessionId)
     }
-  }, [handleSetSessionId])
+  }, [handleSetSessionId, sessionId])
 
-  if (!session) {
+  if (!sessionId) {
     return <Navigate to="/" replace state={{ from: location }} />
   } else {
     return children
