@@ -2,8 +2,8 @@ import { createContext, ReactNode, useState } from 'react'
 
 type SessionContextType = {
   session: string
-  handleLogin: () => void
-  handleLogout: () => void
+  handleSetSessionId: (sessionId: string) => void
+  handleRemoveSessionId: () => void
 }
 
 interface SessionContextProviderProps {
@@ -15,14 +15,20 @@ export const SessionContext = createContext({} as SessionContextType)
 export function SessionContextProvider({
   children,
 }: SessionContextProviderProps) {
-  const [session] = useState('')
+  const [session, setSession] = useState('')
 
-  function handleLogin() {}
+  function handleSetSessionId(sessionId: string) {
+    setSession(sessionId)
+  }
 
-  function handleLogout() {}
+  function handleRemoveSessionId() {
+    setSession('')
+  }
 
   return (
-    <SessionContext.Provider value={{ session, handleLogin, handleLogout }}>
+    <SessionContext.Provider
+      value={{ session, handleSetSessionId, handleRemoveSessionId }}
+    >
       {children}
     </SessionContext.Provider>
   )
