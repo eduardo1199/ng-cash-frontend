@@ -42,9 +42,9 @@ export function SignIn() {
       email,
     })
 
-    handleSetSessionId('0884cff5-4a48-4a93-b294-0c772755f2b5')
+    const sessionId = cookie.get('@ng-cash:sessionId')
 
-    cookie.set('@ng-cash:sessionId', '0884cff5-4a48-4a93-b294-0c772755f2b5')
+    handleSetSessionId(sessionId)
     navigator('/home')
 
     reset()
