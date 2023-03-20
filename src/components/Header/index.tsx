@@ -9,7 +9,7 @@ import Cookie from 'universal-cookie'
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { useNavigate } from 'react-router-dom'
-/* import logo from '../../assets/logo.svg' */
+import logo from '../../assets/logo.svg'
 import { NewTransactionModal } from '../NewTransactionModal'
 import { SessionContext } from '../../context/SessionContext'
 import { useContext } from 'react'
@@ -29,7 +29,7 @@ export function Header() {
   return (
     <HeaderContainer>
       <HeaderContent>
-        {/*  <img src={logo} alt="" /> */}
+        <img src={logo} alt="" />
 
         <ContainerButton>
           <Dialog.Root>
