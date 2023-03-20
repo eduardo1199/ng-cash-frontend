@@ -31,29 +31,28 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
   /* const [cookies, setCookies] = useCookies(['@ng-cash:session-id']) */
 
   const fetchTransactions = useCallback(async (query?: string) => {
-    const response = await api.get('transactions', {
+    /* const response = await api.get('transactions', {
       params: {
         q: query,
         _sort: 'createdAt',
         _order: 'desc',
       },
-    })
-
-    setTransactions(response.data)
+    }) */
+    /* setTransactions(response.data) */
   }, [])
 
   const createTransaction = useCallback(async (data: CreateNewTransaction) => {
     const { category, price, type } = data
 
-    const response = await api.post('transactions', {
+    /*  const response = await api.post('transactions', {
       title: category,
       type,
       amount: price,
-    })
+    }) */
 
-    const cookie = response.headers['set-cookie']
-
-    console.log(cookie)
+    /* const cookie = response.headers['set-cookie']
+     */
+    /* console.log(cookie) */
 
     /* setTransactions((state) => [response.data, ...state]) */
   }, [])
