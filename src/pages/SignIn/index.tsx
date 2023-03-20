@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
+import { api } from '../../lib/axios'
 
 const FormLoginSchema = z.object({
   name: z.string().min(1, 'Nome Obrigatório ou maior que um caractere'),
@@ -33,10 +34,13 @@ export function SignIn() {
   const navigator = useNavigate()
   const { handleSetSessionId } = useContext(SessionContext)
 
-  function handleCreateOrLogin(data: FormTypeDataSchema) {
+  async function handleCreateOrLogin(data: FormTypeDataSchema) {
     const { name, email } = data
 
-    // function handle login and after save the token on cookies
+    await api.post('/users', {
+      name,
+      email,
+    })
 
     handleSetSessionId('0884cff5-4a48-4a93-b294-0c772755f2b5')
 
