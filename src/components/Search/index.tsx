@@ -44,7 +44,7 @@ function SearchFormComponent() {
         {...register('query')}
       />
 
-      <button type="submit" disabled={isSubmitting}>
+      <button type="submit" disabled={isSubmitting} title="search">
         <MagnifyingGlass size={20} />
         Buscar
       </button>
