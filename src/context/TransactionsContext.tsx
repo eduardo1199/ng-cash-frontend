@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState, useCallback } from 'react'
 import { createContext } from 'use-context-selector'
 import { api } from '../lib/axios'
+/* import { useCookies } from 'react-cookie' */
 
 type Transaction = {
   id: number
@@ -27,6 +28,7 @@ export const TransactionContext = createContext({} as TransactionContextType)
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  /* const [cookies, setCookies] = useCookies(['@ng-cash:session-id']) */
 
   const fetchTransactions = useCallback(async (query?: string) => {
     const response = await api.get('transactions', {
@@ -41,17 +43,19 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
   }, [])
 
   const createTransaction = useCallback(async (data: CreateNewTransaction) => {
-    const { category, description, price, type } = data
+    const { category, price, type } = data
 
     const response = await api.post('transactions', {
-      category,
+      title: category,
       type,
-      description,
-      price,
-      createdAt: new Date(),
+      amount: price,
     })
 
-    setTransactions((state) => [response.data, ...state])
+    const cookie = response.headers['set-cookie']
+
+    console.log(cookie)
+
+    /* setTransactions((state) => [response.data, ...state]) */
   }, [])
 
   useEffect(() => {
