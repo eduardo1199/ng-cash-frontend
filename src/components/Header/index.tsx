@@ -34,13 +34,15 @@ export function Header() {
         <ContainerButton>
           <Dialog.Root>
             <Dialog.Trigger asChild>
-              <NewTransactionsButton>Nova transação</NewTransactionsButton>
+              <NewTransactionsButton title="new-transaction">
+                Nova transação
+              </NewTransactionsButton>
             </Dialog.Trigger>
 
             <NewTransactionModal />
           </Dialog.Root>
 
-          <LogoutButton type="button" onClick={handleLogout}>
+          <LogoutButton type="button" onClick={handleLogout} title="logout">
             Sair
           </LogoutButton>
         </ContainerButton>

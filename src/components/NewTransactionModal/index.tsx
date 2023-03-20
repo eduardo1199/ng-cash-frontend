@@ -68,7 +68,11 @@ export function NewTransactionModal() {
           <X size={24} />
         </CloseButton>
 
-        <form action="" onSubmit={handleSubmit(handleCreateNewTransaction)}>
+        <form
+          action=""
+          title="new-transaction-form"
+          onSubmit={handleSubmit(handleCreateNewTransaction)}
+        >
           <input
             type="text"
             placeholder="Descrição"
