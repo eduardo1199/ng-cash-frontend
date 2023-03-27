@@ -2,11 +2,13 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Header } from './index'
 
+import { SessionContextProvider } from '../../context/SessionContext'
+
+const mockNavigation = jest.fn()
+
 jest.mock('react-router-dom', () => {
   return {
-    useNavigate() {
-      return {}
-    },
+    useNavigate: () => mockNavigation,
   }
 })
 
@@ -33,6 +35,21 @@ describe('Test component header', () => {
     const LogoutButton = await findByTitle('logout')
 
     expect(LogoutButton).toBeInTheDocument()
+  })
+
+  it('logout app redirect by home', async () => {
+    const { findByTitle } = render(
+      <SessionContextProvider>
+        <Header />
+      </SessionContextProvider>,
+    )
+
+    const LogoutButton = await findByTitle('logout')
+
+    expect(LogoutButton).toBeInTheDocument()
+    await userEvent.click(LogoutButton)
+
+    expect(mockNavigation).toHaveBeenCalledWith('/')
   })
 
   it('should be not rendered new transaction modal', () => {
