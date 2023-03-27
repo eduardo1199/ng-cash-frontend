@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { TransactionsProvider } from '../../context/TransactionsContext'
 import { SearchForm } from './index'
 
 /* jest.mock('useContextSelector', () => {
@@ -27,20 +28,26 @@ describe('Testing Component Search Form', () => {
     expect(SearchButton).toBeInTheDocument()
   })
 
-  it('should be render text transaction is required', async () => {
-    const { findByTitle, queryByText } = render(<SearchForm />)
+  it('text in input search transaction is not required', async () => {
+    const { findByTitle, queryByText } = render(
+      <TransactionsProvider>
+        <SearchForm />
+      </TransactionsProvider>,
+    )
 
     const SearchButton = await findByTitle('search')
 
     expect(SearchButton).toBeInTheDocument()
-    // await userEvent.click(SearchButton)
+    await userEvent.click(SearchButton)
 
     expect(queryByText('Nome de transação obrigatória')).not.toBeInTheDocument()
   })
 
   it('should be render search transaction', async () => {
     const { findByTitle, queryByText, findByPlaceholderText } = render(
-      <SearchForm />,
+      <TransactionsProvider>
+        <SearchForm />
+      </TransactionsProvider>,
     )
 
     const SearchInput = await findByPlaceholderText('Busque por transações')
@@ -49,7 +56,7 @@ describe('Testing Component Search Form', () => {
     const SearchButton = await findByTitle('search')
 
     expect(SearchButton).toBeInTheDocument()
-    // await userEvent.click(SearchButton)
+    await userEvent.click(SearchButton)
 
     expect(queryByText('Nome de transação obrigatória')).not.toBeInTheDocument()
   })
