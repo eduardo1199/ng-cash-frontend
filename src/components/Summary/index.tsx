@@ -9,7 +9,7 @@ export function Summary() {
 
   return (
     <SummaryContainer>
-      <SummaryCard>
+      <SummaryCard data-testid="income-card">
         <header>
           <span>Entradas</span>
 
@@ -18,7 +18,7 @@ export function Summary() {
 
         <strong>{priceFormatter.format(income)}</strong>
       </SummaryCard>
-      <SummaryCard>
+      <SummaryCard data-testid="outcome-card">
         <header>
           <span>Saídas</span>
 
@@ -27,7 +27,7 @@ export function Summary() {
 
         <strong>{priceFormatter.format(outcome)}</strong>
       </SummaryCard>
-      <SummaryCard variant="green">
+      <SummaryCard variant="green" data-testid="total-card">
         <header>
           <span>Total</span>
 
