@@ -23,7 +23,7 @@ export function Header() {
   function handleLogout() {
     navigator('/')
     handleRemoveSessionId()
-    cookie.remove('@ng-cash:sessionId')
+    cookie.remove('sessionId')
   }
 
   return (

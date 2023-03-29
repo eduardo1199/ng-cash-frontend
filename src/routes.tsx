@@ -18,7 +18,7 @@ interface ProtectedRouterProps {
 function ProtectedRouter({ children }: ProtectedRouterProps) {
   const cookie = new Cookie()
 
-  const sessionId = cookie.get('@ng-cash:sessionId')
+  const sessionId = cookie.get('sessionId')
 
   const { handleSetSessionId } = useContext(SessionContext)
   const location = useLocation()
@@ -47,7 +47,7 @@ function RedirectToHome({ children }: RedirectToHomeProps) {
   useEffect(() => {
     const cookie = new Cookie()
 
-    const sessionId = cookie.get('@ng-cash:sessionId')
+    const sessionId = cookie.get('sessionId')
 
     if (sessionId) {
       handleSetSessionId(sessionId)

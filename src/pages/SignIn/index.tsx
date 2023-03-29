@@ -42,7 +42,7 @@ export function SignIn() {
       email,
     })
 
-    const sessionId = cookie.get('@ng-cash:sessionId')
+    const sessionId = cookie.get('sessionId')
 
     handleSetSessionId(sessionId)
     navigator('/home')

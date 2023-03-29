@@ -1,15 +1,17 @@
 import { ReactNode, useEffect, useState, useCallback } from 'react'
 import { createContext } from 'use-context-selector'
 import { api } from '../lib/axios'
-/* import { useCookies } from 'react-cookie' */
+
+import Cookie from 'universal-cookie'
 
 type Transaction = {
-  id: number
-  description: string
+  id: string
   type: 'income' | 'outcome'
-  price: number
-  category: string
-  createdAt: string
+  amount: number
+  created_at: string
+  user_id: string
+  description: string | null
+  category: string | null
 }
 
 type CreateNewTransaction = Omit<Transaction, 'id' | 'createdAt'>
@@ -28,18 +30,20 @@ export const TransactionContext = createContext({} as TransactionContextType)
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  /* const [cookies, setCookies] = useCookies(['@ng-cash:session-id']) */
 
-  const fetchTransactions = useCallback(async (query?: string) => {
-    /* const response = await api.get('transactions', {
-      params: {
-        q: query,
-        _sort: 'createdAt',
-        _order: 'desc',
-      },
-    }) */
-    /* setTransactions(response.data) */
-  }, [])
+  const cookie = new Cookie()
+
+  const sessionId = cookie.get('sessionId')
+
+  const fetchTransactions = useCallback(
+    async (query?: string) => {
+      const response = await api.get<{ transactions: Transaction[] }>(
+        `transactions/${sessionId}`,
+      )
+      setTransactions(response.data.transactions)
+    },
+    [sessionId],
+  )
 
   const createTransaction = useCallback(async (data: CreateNewTransaction) => {
     const { category, price, type } = data
