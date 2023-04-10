@@ -56,7 +56,7 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         userId: id,
       })
 
-      fetchTransactions()
+      await fetchTransactions()
     },
     [fetchTransactions, id],
   )
