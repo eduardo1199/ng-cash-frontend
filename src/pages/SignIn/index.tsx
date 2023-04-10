@@ -37,11 +37,12 @@ export function SignIn() {
   async function handleCreateOrLogin(data: FormTypeDataSchema) {
     const { name, email } = data
 
-    await api.post('/users', {
+    const response = await api.post<{ id: string }>('/users', {
       name,
       email,
     })
 
+    cookie.set('@ngcash/id', response.data.id)
     const sessionId = cookie.get('sessionId')
 
     handleSetSessionId(sessionId)

@@ -33,16 +33,16 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
 
   const cookie = new Cookie()
 
-  const sessionId = cookie.get('sessionId')
+  const id = cookie.get('@ngcash/id')
 
   const fetchTransactions = useCallback(
     async (query?: string) => {
       const response = await api.get<{ transactions: Transaction[] }>(
-        `transactions/${sessionId}`,
+        `transactions/${id}`,
       )
       setTransactions(response.data.transactions)
     },
-    [sessionId],
+    [id],
   )
 
   const createTransaction = useCallback(async (data: CreateNewTransaction) => {
