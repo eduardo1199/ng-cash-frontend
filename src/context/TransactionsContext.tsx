@@ -8,13 +8,12 @@ type Transaction = {
   id: string
   type: 'income' | 'outcome'
   amount: number
-  created_at: string
   user_id: string
   description: string | null
   category: string | null
 }
 
-type CreateNewTransaction = Omit<Transaction, 'id' | 'createdAt'>
+type CreateNewTransaction = Omit<Transaction, 'id' | 'createdAt' | 'user_id'>
 
 type TransactionContextType = {
   transactions: Transaction[]
@@ -45,21 +44,22 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     [id],
   )
 
-  const createTransaction = useCallback(async (data: CreateNewTransaction) => {
-    const { category, price, type } = data
+  const createTransaction = useCallback(
+    async (data: CreateNewTransaction) => {
+      const { category, amount, type, description } = data
 
-    /*  const response = await api.post('transactions', {
-      title: category,
-      type,
-      amount: price,
-    }) */
+      await api.post('transactions/deposit', {
+        category,
+        type,
+        amount,
+        description,
+        userId: id,
+      })
 
-    /* const cookie = response.headers['set-cookie']
-     */
-    /* console.log(cookie) */
-
-    /* setTransactions((state) => [response.data, ...state]) */
-  }, [])
+      fetchTransactions()
+    },
+    [fetchTransactions, id],
+  )
 
   useEffect(() => {
     fetchTransactions()
