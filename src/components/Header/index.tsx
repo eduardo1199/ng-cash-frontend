@@ -24,6 +24,7 @@ export function Header() {
     navigator('/')
     handleRemoveSessionId()
     cookie.remove('sessionId')
+    cookie.remove('@ngcash/id')
   }
 
   return (

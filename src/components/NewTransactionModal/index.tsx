@@ -17,7 +17,7 @@ import { useContextSelector } from 'use-context-selector'
 
 const newTransactionsFormSchema = z.object({
   description: z.string(),
-  price: z.number(),
+  amount: z.number(),
   category: z.string(),
   type: z.enum(['income', 'outcome']),
 })
@@ -83,7 +83,7 @@ export function NewTransactionModal() {
             type="number"
             placeholder="Preço"
             required
-            {...register('price', { valueAsNumber: true })}
+            {...register('amount', { valueAsNumber: true })}
           />
           <input
             type="text"
