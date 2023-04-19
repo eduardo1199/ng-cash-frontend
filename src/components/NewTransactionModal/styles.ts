@@ -123,12 +123,22 @@ export const TransactionsTypeButton = styled(
     }
   }
 `
+export const SelectTrigger = styled(Select.Trigger)`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 
-export const ContentSelect = styled(Select.Content)`
-  position: fixed;
-  top: 56%;
-  left: 39%;
+  border-radius: 6px;
+  border: 0;
+  background: ${(props) => props.theme['gray-900']};
+  color: ${(props) => props.theme['gray-300']};
+  padding: 1rem;
 
-  background-color: ${(props) => props.theme['gray-600']};
-  width: 22%;
+  span {
+    color: ${(props) => props.theme['gray-500']};
+  }
+`
+
+export const SelectViewPort = styled(Select.Viewport)`
+  top: 50px;
 `

@@ -4,8 +4,9 @@ import { ArrowCircleDown, ArrowCircleUp, X, CaretDown } from 'phosphor-react'
 import {
   CloseButton,
   Content,
-  ContentSelect,
+  SelectViewPort,
   Overlay,
+  SelectTrigger,
   TransactionsType,
   TransactionsTypeButton,
 } from './styles'
@@ -14,6 +15,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TransactionContext } from '../../context/TransactionsContext'
 import { useContextSelector } from 'use-context-selector'
+import { SelectItem } from './SelectItem'
 
 const newTransactionsFormSchema = z.object({
   description: z.string(),
@@ -93,26 +95,28 @@ export function NewTransactionModal() {
           />
 
           <Select.Root>
-            <Select.Trigger>
+            <SelectTrigger>
               <Select.Value placeholder="Selecione um usuário..." />
               <Select.Icon>
                 <CaretDown size={14} />
               </Select.Icon>
-            </Select.Trigger>
+            </SelectTrigger>
 
             <Select.Portal>
-              <ContentSelect>
+              <Select.Content>
                 <Select.ScrollUpButton>
                   <CaretDown size={14} />
                 </Select.ScrollUpButton>
-                <Select.Viewport>
-                  <Select.Item value="1">Valor 1</Select.Item>
+                <SelectViewPort>
+                  <SelectItem value="Eduardo Soares">Eduardo Soares</SelectItem>
                   <Select.Separator />
-                  <Select.Item value="2">Valor 2</Select.Item>
-                </Select.Viewport>
+                  <SelectItem value="Guilherme Soares">
+                    Guilherme Soares
+                  </SelectItem>
+                </SelectViewPort>
                 <Select.ScrollDownButton />
                 <Select.Arrow />
-              </ContentSelect>
+              </Select.Content>
             </Select.Portal>
           </Select.Root>
 
