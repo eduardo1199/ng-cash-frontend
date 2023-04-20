@@ -4,27 +4,39 @@ import { ArrowCircleDown, ArrowCircleUp, X, CaretDown } from 'phosphor-react'
 import {
   CloseButton,
   Content,
-  ContentSelect,
+  SelectViewPort,
   Overlay,
+  SelectTrigger,
   TransactionsType,
   TransactionsTypeButton,
 } from './styles'
 import * as z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TransactionContext } from '../../context/TransactionsContext'
-import { useContextSelector } from 'use-context-selector'
+/* import { TransactionContext } from '../../context/TransactionsContext'
+import { useContextSelector } from 'use-context-selector' */
+import { SelectItem } from './SelectItem'
+import { useEffect, useState } from 'react'
+import { User } from '../../@types/styled'
+import { api } from '../../lib/axios'
 
 const newTransactionsFormSchema = z.object({
   description: z.string(),
   amount: z.number(),
   category: z.string(),
   type: z.enum(['income', 'outcome']),
+  user_id: z.string().uuid(),
 })
 
 type NewTransactionSchemaFormType = z.infer<typeof newTransactionsFormSchema>
 
+interface ResponseUsers {
+  users: User[]
+}
+
 export function NewTransactionModal() {
+  const [users, setUsers] = useState<User[]>([])
+
   const {
     register,
     handleSubmit,
@@ -38,12 +50,12 @@ export function NewTransactionModal() {
     },
   })
 
-  const createTransaction = useContextSelector(
+  /*  const createTransaction = useContextSelector(
     TransactionContext,
     (context) => {
       return context.createTransaction
     },
-  )
+  ) */
 
   async function handleCreateNewTransaction(
     data: NewTransactionSchemaFormType,
@@ -52,10 +64,22 @@ export function NewTransactionModal() {
       ...data,
     }
 
-    await createTransaction(newTransaction)
+    console.log(newTransaction)
+
+    // await createTransaction(newTransaction)
 
     reset()
   }
+
+  useEffect(() => {
+    async function getUsersRequest() {
+      const response = await api.get<ResponseUsers>('users')
+
+      setUsers(response.data.users)
+    }
+
+    getUsersRequest()
+  }, [])
 
   return (
     <Dialog.Portal>
@@ -92,29 +116,51 @@ export function NewTransactionModal() {
             {...register('category')}
           />
 
-          <Select.Root>
-            <Select.Trigger>
-              <Select.Value placeholder="Selecione um usuário..." />
-              <Select.Icon>
-                <CaretDown size={14} />
-              </Select.Icon>
-            </Select.Trigger>
+          <Controller
+            control={control}
+            name="user_id"
+            render={(props) => {
+              return (
+                <Select.Root
+                  value={props.field.value}
+                  onValueChange={props.field.onChange}
+                >
+                  <SelectTrigger>
+                    <Select.Value
+                      placeholder="Selecione um usuário..."
+                      aria-label={props.field.name}
+                    />
+                    <Select.Icon>
+                      <CaretDown size={14} />
+                    </Select.Icon>
+                  </SelectTrigger>
 
-            <Select.Portal>
-              <ContentSelect>
-                <Select.ScrollUpButton>
-                  <CaretDown size={14} />
-                </Select.ScrollUpButton>
-                <Select.Viewport>
-                  <Select.Item value="1">Valor 1</Select.Item>
-                  <Select.Separator />
-                  <Select.Item value="2">Valor 2</Select.Item>
-                </Select.Viewport>
-                <Select.ScrollDownButton />
-                <Select.Arrow />
-              </ContentSelect>
-            </Select.Portal>
-          </Select.Root>
+                  <Select.Portal>
+                    <Select.Content>
+                      <Select.ScrollUpButton>
+                        <CaretDown size={14} />
+                      </Select.ScrollUpButton>
+                      <SelectViewPort>
+                        {users.length > 0 &&
+                          users.map((user) => {
+                            return (
+                              <>
+                                <SelectItem value={user.id} key={user.id}>
+                                  {user.name}
+                                </SelectItem>
+                                <Select.Separator />
+                              </>
+                            )
+                          })}
+                      </SelectViewPort>
+                      <Select.ScrollDownButton />
+                      <Select.Arrow />
+                    </Select.Content>
+                  </Select.Portal>
+                </Select.Root>
+              )
+            }}
+          />
 
           <Controller
             control={control}

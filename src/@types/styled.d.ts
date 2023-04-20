@@ -6,3 +6,8 @@ type ThemeType = typeof defaultTheme
 declare module 'styled-components' {
   export interface DefaultTheme extends ThemeType {}
 }
+
+export type User = {
+  id: string
+  name: string
+}
