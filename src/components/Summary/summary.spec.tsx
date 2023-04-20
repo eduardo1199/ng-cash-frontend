@@ -5,12 +5,13 @@ import { faker } from '@faker-js/faker'
 import { Summary } from './index'
 
 type Transaction = {
-  id: number
-  description: string
+  id: string
   type: 'income' | 'outcome'
-  price: number
-  category: string
-  createdAt: string
+  amount: number
+  user_id: string | null
+  description: string
+  category: string | null
+  created_at: string
 }
 
 beforeEach(() => {
@@ -19,20 +20,22 @@ beforeEach(() => {
 
   const transactions: Transaction[] = [
     {
-      id: Number(faker.datatype.uuid()),
+      id: String(faker.datatype.uuid()),
       description: 'Venda',
       type: 'income',
-      price: 1500,
+      amount: 1500,
       category: 'Entrada',
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      user_id: null,
     },
     {
-      id: Number(faker.datatype.uuid()),
-      description: 'Emprestimo',
-      type: 'outcome',
-      price: 200,
-      category: 'Saída',
-      createdAt: new Date().toISOString(),
+      id: String(faker.datatype.uuid()),
+      description: 'Deposito',
+      type: 'income',
+      amount: 200,
+      category: 'Poupança',
+      created_at: new Date().toISOString(),
+      user_id: null,
     },
   ]
 
@@ -54,19 +57,19 @@ describe('Testing component Summary', () => {
 
   it('should render correct value income', async () => {
     expect(await screen.findByTestId('income-card')).toHaveTextContent(
-      'R$ 1.500,00',
+      'R$ 1.700,00',
     )
   })
 
   it('should render correct value income', async () => {
     expect(await screen.findByTestId('outcome-card')).toHaveTextContent(
-      'R$ 200,00',
+      'R$ 0,00',
     )
   })
 
   it('should render correct value income', async () => {
     expect(await screen.findByTestId('total-card')).toHaveTextContent(
-      'R$ 1.300,00',
+      'R$ 1.700,00',
     )
   })
 })
