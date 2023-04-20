@@ -8,10 +8,10 @@ type Transaction = {
   id: string
   type: 'income' | 'outcome'
   amount: number
-  user_id: string
-  description: string | null
+  user_id: string | null
+  description: string
   category: string | null
-  created_at: string
+  created_at: string | null
 }
 
 type CreateNewTransaction = Omit<Transaction, 'id' | 'created_at' | 'user_id'>
