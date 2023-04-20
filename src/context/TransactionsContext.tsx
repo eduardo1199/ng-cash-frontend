@@ -11,9 +11,10 @@ type Transaction = {
   user_id: string
   description: string | null
   category: string | null
+  created_at: string
 }
 
-type CreateNewTransaction = Omit<Transaction, 'id' | 'createdAt' | 'user_id'>
+type CreateNewTransaction = Omit<Transaction, 'id' | 'created_at' | 'user_id'>
 
 type TransactionContextType = {
   transactions: Transaction[]
