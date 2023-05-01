@@ -50,7 +50,8 @@ export function NewTransactionModal() {
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    watch,
+    formState: { isSubmitting },
   } = useForm<NewTransactionSchemaFormType>({
     resolver: zodResolver(newTransactionsFormSchema),
     defaultValues: {
@@ -58,10 +59,10 @@ export function NewTransactionModal() {
     },
   })
 
-  const createTransaction = useContextSelector(
+  const { createTransaction, createTransference } = useContextSelector(
     TransactionContext,
     (context) => {
-      return context.createTransaction
+      return context
     },
   )
 
@@ -78,6 +79,8 @@ export function NewTransactionModal() {
 
     if (newTransaction.type === 'income') {
       await createTransaction(newTransaction)
+    } else {
+      await createTransference(newTransaction)
     }
 
     reset()
@@ -94,7 +97,7 @@ export function NewTransactionModal() {
     getUsersRequest()
   }, [])
 
-  console.log(errors)
+  const { type } = watch()
 
   return (
     <Dialog.Root open={open} onOpenChange={toggleTransactionModal}>
@@ -138,51 +141,53 @@ export function NewTransactionModal() {
               {...register('category')}
             />
 
-            <Controller
-              control={control}
-              name="user_id"
-              render={(props) => {
-                return (
-                  <Select.Root
-                    value={props.field.value}
-                    onValueChange={props.field.onChange}
-                  >
-                    <SelectTrigger>
-                      <Select.Value
-                        placeholder="Selecione um usuário..."
-                        aria-label={props.field.name}
-                      />
-                      <Select.Icon>
-                        <CaretDown size={14} />
-                      </Select.Icon>
-                    </SelectTrigger>
-
-                    <Select.Portal>
-                      <Select.Content>
-                        <Select.ScrollUpButton>
+            {type === 'outcome' && (
+              <Controller
+                control={control}
+                name="user_id"
+                render={(props) => {
+                  return (
+                    <Select.Root
+                      value={props.field.value}
+                      onValueChange={props.field.onChange}
+                    >
+                      <SelectTrigger>
+                        <Select.Value
+                          placeholder="Selecione um usuário..."
+                          aria-label={props.field.name}
+                        />
+                        <Select.Icon>
                           <CaretDown size={14} />
-                        </Select.ScrollUpButton>
-                        <SelectViewPort>
-                          {users.length > 0 &&
-                            users.map((user) => {
-                              return (
-                                <>
-                                  <SelectItem value={user.id} key={user.id}>
-                                    {user.name}
-                                  </SelectItem>
-                                  <Select.Separator />
-                                </>
-                              )
-                            })}
-                        </SelectViewPort>
-                        <Select.ScrollDownButton />
-                        <Select.Arrow />
-                      </Select.Content>
-                    </Select.Portal>
-                  </Select.Root>
-                )
-              }}
-            />
+                        </Select.Icon>
+                      </SelectTrigger>
+
+                      <Select.Portal>
+                        <Select.Content>
+                          <Select.ScrollUpButton>
+                            <CaretDown size={14} />
+                          </Select.ScrollUpButton>
+                          <SelectViewPort>
+                            {users.length > 0 &&
+                              users.map((user) => {
+                                return (
+                                  <>
+                                    <SelectItem value={user.id} key={user.id}>
+                                      {user.name}
+                                    </SelectItem>
+                                    <Select.Separator />
+                                  </>
+                                )
+                              })}
+                          </SelectViewPort>
+                          <Select.ScrollDownButton />
+                          <Select.Arrow />
+                        </Select.Content>
+                      </Select.Portal>
+                    </Select.Root>
+                  )
+                }}
+              />
+            )}
 
             <Controller
               control={control}
