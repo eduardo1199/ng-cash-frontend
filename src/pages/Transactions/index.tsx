@@ -41,10 +41,8 @@ export function Transactions() {
                   <td>{transaction.category}</td>
 
                   <td>
-                    {dateFormatter.format(new Date(transaction.created_at))}
+                    {dateFormatter.format(new Date(transaction.created_at!))}
                   </td>
-
-                  <td>Eduardo Soares</td>
                 </tr>
               )
             })}

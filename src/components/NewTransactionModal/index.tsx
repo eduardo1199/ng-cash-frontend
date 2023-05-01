@@ -9,24 +9,31 @@ import {
   SelectTrigger,
   TransactionsType,
   TransactionsTypeButton,
+  NewTransactionsButton,
 } from './styles'
 import * as z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-/* import { TransactionContext } from '../../context/TransactionsContext'
-import { useContextSelector } from 'use-context-selector' */
+import { TransactionContext } from '../../context/TransactionsContext'
+import { useContextSelector } from 'use-context-selector'
 import { SelectItem } from './SelectItem'
 import { useEffect, useState } from 'react'
 import { User } from '../../@types/styled'
 import { api } from '../../lib/axios'
 
-const newTransactionsFormSchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  category: z.string(),
-  type: z.enum(['income', 'outcome']),
-  user_id: z.string().uuid(),
-})
+const newTransactionsFormSchema = z
+  .object({
+    description: z.string(),
+    amount: z.number(),
+    category: z.string(),
+    type: z.enum(['income', 'outcome']),
+    user_id: z.string().uuid(),
+  })
+  .partial()
+  .refine(
+    (schema) => schema.type === 'income' || !!schema.user_id,
+    'É obrigatório escolher usuário para de envio!',
+  )
 
 type NewTransactionSchemaFormType = z.infer<typeof newTransactionsFormSchema>
 
@@ -36,13 +43,14 @@ interface ResponseUsers {
 
 export function NewTransactionModal() {
   const [users, setUsers] = useState<User[]>([])
+  const [open, setOpen] = useState(false)
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { isSubmitted },
+    formState: { errors, isSubmitting },
   } = useForm<NewTransactionSchemaFormType>({
     resolver: zodResolver(newTransactionsFormSchema),
     defaultValues: {
@@ -50,12 +58,16 @@ export function NewTransactionModal() {
     },
   })
 
-  /*  const createTransaction = useContextSelector(
+  const createTransaction = useContextSelector(
     TransactionContext,
     (context) => {
       return context.createTransaction
     },
-  ) */
+  )
+
+  function toggleTransactionModal() {
+    setOpen((state) => !state)
+  }
 
   async function handleCreateNewTransaction(
     data: NewTransactionSchemaFormType,
@@ -64,11 +76,12 @@ export function NewTransactionModal() {
       ...data,
     }
 
-    console.log(newTransaction)
-
-    // await createTransaction(newTransaction)
+    if (newTransaction.type === 'income') {
+      await createTransaction(newTransaction)
+    }
 
     reset()
+    toggleTransactionModal()
   }
 
   useEffect(() => {
@@ -81,114 +94,124 @@ export function NewTransactionModal() {
     getUsersRequest()
   }, [])
 
+  console.log(errors)
+
   return (
-    <Dialog.Portal>
-      <Overlay />
+    <Dialog.Root open={open} onOpenChange={toggleTransactionModal}>
+      <Dialog.Trigger asChild>
+        <NewTransactionsButton title="new-transaction">
+          Nova transação
+        </NewTransactionsButton>
+      </Dialog.Trigger>
 
-      <Content>
-        <Dialog.Title>Nova transação</Dialog.Title>
+      <Dialog.Portal>
+        <Overlay />
 
-        <CloseButton>
-          <X size={24} />
-        </CloseButton>
+        <Content>
+          <Dialog.Title>Nova transação</Dialog.Title>
 
-        <form
-          action=""
-          title="new-transaction-form"
-          onSubmit={handleSubmit(handleCreateNewTransaction)}
-        >
-          <input
-            type="text"
-            placeholder="Descrição"
-            required
-            {...register('description')}
-          />
-          <input
-            type="number"
-            placeholder="Preço"
-            required
-            {...register('amount', { valueAsNumber: true })}
-          />
-          <input
-            type="text"
-            placeholder="Categoria"
-            required
-            {...register('category')}
-          />
+          <CloseButton>
+            <X size={24} />
+          </CloseButton>
 
-          <Controller
-            control={control}
-            name="user_id"
-            render={(props) => {
-              return (
-                <Select.Root
-                  value={props.field.value}
-                  onValueChange={props.field.onChange}
-                >
-                  <SelectTrigger>
-                    <Select.Value
-                      placeholder="Selecione um usuário..."
-                      aria-label={props.field.name}
-                    />
-                    <Select.Icon>
-                      <CaretDown size={14} />
-                    </Select.Icon>
-                  </SelectTrigger>
+          <form
+            action=""
+            title="new-transaction-form"
+            onSubmit={handleSubmit(handleCreateNewTransaction)}
+          >
+            <input
+              type="text"
+              placeholder="Descrição"
+              required
+              {...register('description')}
+            />
+            <input
+              type="number"
+              placeholder="Preço"
+              required
+              {...register('amount', { valueAsNumber: true })}
+            />
+            <input
+              type="text"
+              placeholder="Categoria"
+              required
+              {...register('category')}
+            />
 
-                  <Select.Portal>
-                    <Select.Content>
-                      <Select.ScrollUpButton>
+            <Controller
+              control={control}
+              name="user_id"
+              render={(props) => {
+                return (
+                  <Select.Root
+                    value={props.field.value}
+                    onValueChange={props.field.onChange}
+                  >
+                    <SelectTrigger>
+                      <Select.Value
+                        placeholder="Selecione um usuário..."
+                        aria-label={props.field.name}
+                      />
+                      <Select.Icon>
                         <CaretDown size={14} />
-                      </Select.ScrollUpButton>
-                      <SelectViewPort>
-                        {users.length > 0 &&
-                          users.map((user) => {
-                            return (
-                              <>
-                                <SelectItem value={user.id} key={user.id}>
-                                  {user.name}
-                                </SelectItem>
-                                <Select.Separator />
-                              </>
-                            )
-                          })}
-                      </SelectViewPort>
-                      <Select.ScrollDownButton />
-                      <Select.Arrow />
-                    </Select.Content>
-                  </Select.Portal>
-                </Select.Root>
-              )
-            }}
-          />
+                      </Select.Icon>
+                    </SelectTrigger>
 
-          <Controller
-            control={control}
-            name="type"
-            render={(props) => {
-              return (
-                <TransactionsType
-                  onValueChange={props.field.onChange}
-                  value={props.field.value}
-                >
-                  <TransactionsTypeButton variant="income" value="income">
-                    <ArrowCircleUp size={24} />
-                    Guardar
-                  </TransactionsTypeButton>
-                  <TransactionsTypeButton variant="outcome" value="outcome">
-                    <ArrowCircleDown size={24} />
-                    Transferir
-                  </TransactionsTypeButton>
-                </TransactionsType>
-              )
-            }}
-          />
+                    <Select.Portal>
+                      <Select.Content>
+                        <Select.ScrollUpButton>
+                          <CaretDown size={14} />
+                        </Select.ScrollUpButton>
+                        <SelectViewPort>
+                          {users.length > 0 &&
+                            users.map((user) => {
+                              return (
+                                <>
+                                  <SelectItem value={user.id} key={user.id}>
+                                    {user.name}
+                                  </SelectItem>
+                                  <Select.Separator />
+                                </>
+                              )
+                            })}
+                        </SelectViewPort>
+                        <Select.ScrollDownButton />
+                        <Select.Arrow />
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
+                )
+              }}
+            />
 
-          <button type="submit" disabled={isSubmitted}>
-            Cadastrar
-          </button>
-        </form>
-      </Content>
-    </Dialog.Portal>
+            <Controller
+              control={control}
+              name="type"
+              render={(props) => {
+                return (
+                  <TransactionsType
+                    onValueChange={props.field.onChange}
+                    value={props.field.value}
+                  >
+                    <TransactionsTypeButton variant="income" value="income">
+                      <ArrowCircleUp size={24} />
+                      Guardar
+                    </TransactionsTypeButton>
+                    <TransactionsTypeButton variant="outcome" value="outcome">
+                      <ArrowCircleDown size={24} />
+                      Transferir
+                    </TransactionsTypeButton>
+                  </TransactionsType>
+                )
+              }}
+            />
+
+            <button type="submit" disabled={isSubmitting}>
+              Cadastrar
+            </button>
+          </form>
+        </Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
