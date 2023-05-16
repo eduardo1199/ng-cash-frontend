@@ -1,8 +1,6 @@
-import { ReactNode, useEffect, useState, useCallback, useContext } from 'react'
+import { ReactNode, useEffect, useState, useCallback } from 'react'
 import { createContext } from 'use-context-selector'
 import { api } from '../lib/axios'
-
-import { SessionContext } from './SessionContext'
 
 type Transaction = {
   id: string
@@ -40,21 +38,23 @@ export const TransactionContext = createContext({} as TransactionContextType)
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
 
-  const { session } = useContext(SessionContext)
+  const userId = localStorage.getItem('@ngcash-userId')
 
   const fetchTransactions = useCallback(
     async (query?: string) => {
-      if (!session) {
+      if (!userId) {
         return
       }
 
       const response = await api.get<{ transactions: Transaction[] }>(
-        `transactions/${session}`,
+        `transactions/${userId}`,
       )
+
+      console.log('render fetch')
 
       setTransactions(response.data.transactions)
     },
-    [session],
+    [userId],
   )
 
   const createTransaction = useCallback(
@@ -66,12 +66,12 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         type,
         amount,
         description,
-        userId: session,
+        userId,
       })
 
       await fetchTransactions()
     },
-    [fetchTransactions, session],
+    [fetchTransactions, userId],
   )
 
   const createTransference = useCallback(
@@ -89,21 +89,17 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         type,
         amount,
         description,
-        userId: session,
+        userId,
         userDestinationId,
       })
 
       await fetchTransactions()
     },
-    [fetchTransactions, session],
+    [fetchTransactions, userId],
   )
 
   useEffect(() => {
     fetchTransactions()
-
-    return () => {
-      setTransactions([])
-    }
   }, [fetchTransactions])
 
   return (

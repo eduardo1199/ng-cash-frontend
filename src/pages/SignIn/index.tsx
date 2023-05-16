@@ -42,8 +42,10 @@ export function SignIn() {
       email,
     })
 
-    cookie.set('@ngcash/id', response.data.id)
+    const userId = response.data.id
     const sessionId = cookie.get('sessionId')
+
+    localStorage.setItem('@ngcash-userId', userId)
 
     handleSetSessionId(sessionId)
     navigator('/home')
