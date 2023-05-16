@@ -31,20 +31,18 @@ export function Transactions() {
                   <td width="30%">{transaction.description}</td>
 
                   <td>
-                    <PriceHighLight variant={transaction.type}>
+                    <PriceHighLight variant={transaction.type!}>
                       {transaction.type === 'outcome' && '- '}
                       {transaction.type === 'income' && '+ '}
-                      {priceFormatter.format(transaction.amount)}
+                      {priceFormatter.format(transaction.amount!)}
                     </PriceHighLight>
                   </td>
 
                   <td>{transaction.category}</td>
 
                   <td>
-                    {dateFormatter.format(new Date(transaction.created_at))}
+                    {dateFormatter.format(new Date(transaction.created_at!))}
                   </td>
-
-                  <td>Eduardo Soares</td>
                 </tr>
               )
             })}

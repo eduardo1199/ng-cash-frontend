@@ -2,24 +2,31 @@ import { ReactNode, useEffect, useState, useCallback } from 'react'
 import { createContext } from 'use-context-selector'
 import { api } from '../lib/axios'
 
-import Cookie from 'universal-cookie'
-
 type Transaction = {
   id: string
-  type: 'income' | 'outcome'
-  amount: number
-  user_id: string | null
-  description: string
-  category: string | null
-  created_at: string | null
+  type?: 'income' | 'outcome'
+  amount?: number
+  user_id?: string
+  description?: string
+  category?: string | null
+  created_at?: string | null
 }
 
-type CreateNewTransaction = Omit<Transaction, 'id' | 'created_at' | 'user_id'>
+type CreateNewTransactionDeposit = Omit<
+  Transaction,
+  'id' | 'created_at' | 'user_id'
+>
+type CreateDataTransfer = Omit<Transaction, 'created_at' | 'id'>
+
+interface CreateNewTransactionTransfer extends CreateDataTransfer {
+  userDestinationId?: string
+}
 
 type TransactionContextType = {
   transactions: Transaction[]
   fetchTransactions: (query?: string) => Promise<void>
-  createTransaction: (data: CreateNewTransaction) => Promise<void>
+  createTransaction: (data: CreateNewTransactionDeposit) => Promise<void>
+  createTransference: (data: CreateNewTransactionTransfer) => Promise<void>
 }
 
 interface TransactionsProviderProps {
@@ -31,22 +38,27 @@ export const TransactionContext = createContext({} as TransactionContextType)
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
 
-  const cookie = new Cookie()
-
-  const id = cookie.get('@ngcash/id')
+  const userId = localStorage.getItem('@ngcash-userId')
 
   const fetchTransactions = useCallback(
     async (query?: string) => {
+      if (!userId) {
+        return
+      }
+
       const response = await api.get<{ transactions: Transaction[] }>(
-        `transactions/${id}`,
+        `transactions/${userId}`,
       )
+
+      console.log('render fetch')
+
       setTransactions(response.data.transactions)
     },
-    [id],
+    [userId],
   )
 
   const createTransaction = useCallback(
-    async (data: CreateNewTransaction) => {
+    async (data: CreateNewTransactionDeposit) => {
       const { category, amount, type, description } = data
 
       await api.post('transactions/deposit', {
@@ -54,12 +66,36 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         type,
         amount,
         description,
-        userId: id,
+        userId,
       })
 
       await fetchTransactions()
     },
-    [fetchTransactions, id],
+    [fetchTransactions, userId],
+  )
+
+  const createTransference = useCallback(
+    async (data: CreateNewTransactionTransfer) => {
+      const {
+        category,
+        amount,
+        type,
+        description,
+        user_id: userDestinationId,
+      } = data
+
+      await api.post('transactions/transfer', {
+        category,
+        type,
+        amount,
+        description,
+        userId,
+        userDestinationId,
+      })
+
+      await fetchTransactions()
+    },
+    [fetchTransactions, userId],
   )
 
   useEffect(() => {
@@ -68,7 +104,12 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
 
   return (
     <TransactionContext.Provider
-      value={{ transactions, fetchTransactions, createTransaction }}
+      value={{
+        transactions,
+        fetchTransactions,
+        createTransaction,
+        createTransference,
+      }}
     >
       {children}
     </TransactionContext.Provider>

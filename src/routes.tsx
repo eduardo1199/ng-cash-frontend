@@ -11,6 +11,7 @@ import Cookie from 'universal-cookie'
 import { SignIn } from './pages/SignIn'
 import { Transactions } from './pages/Transactions'
 
+import { TransactionsProvider } from './context/TransactionsContext'
 interface ProtectedRouterProps {
   children: JSX.Element
 }
@@ -74,7 +75,9 @@ const router = createBrowserRouter([
     path: '/home',
     element: (
       <ProtectedRouter>
-        <Transactions />
+        <TransactionsProvider>
+          <Transactions />
+        </TransactionsProvider>
       </ProtectedRouter>
     ),
   },
