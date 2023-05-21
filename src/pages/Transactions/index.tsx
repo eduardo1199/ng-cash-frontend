@@ -4,10 +4,14 @@ import { SearchForm } from '../../components/Search'
 import { Summary } from '../../components/Summary'
 import { TransactionContext } from '../../context/TransactionsContext'
 import { priceFormatter, dateFormatter } from '../../utils/formatter'
+import * as RadioGroup from '@radix-ui/react-radio-group'
 import {
   PriceHighLight,
   TransactionsContainer,
   TransactionsTable,
+  RadioGroupRoot,
+  Item,
+  RadioItem,
 } from './styles'
 
 export function Transactions() {
@@ -22,6 +26,21 @@ export function Transactions() {
 
       <TransactionsContainer>
         <SearchForm />
+
+        <RadioGroupRoot>
+          <Item>
+            <RadioItem value="transaction" id="transaction">
+              <RadioGroup.Indicator />
+            </RadioItem>
+            <label htmlFor="transaction">Transações</label>
+          </Item>
+          <Item>
+            <RadioItem value="users" id="users">
+              <RadioGroup.Indicator />
+            </RadioItem>
+            <label htmlFor="users">Usuários</label>
+          </Item>
+        </RadioGroupRoot>
 
         <TransactionsTable>
           <tbody>
