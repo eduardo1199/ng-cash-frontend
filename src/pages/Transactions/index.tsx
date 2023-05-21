@@ -12,7 +12,9 @@ import {
   RadioGroupRoot,
   Item,
   RadioItem,
+  ButtonViewTransaction,
 } from './styles'
+import { Eye } from 'phosphor-react'
 
 export function Transactions() {
   const transactions = useContextSelector(TransactionContext, (context) => {
@@ -61,6 +63,12 @@ export function Transactions() {
 
                   <td>
                     {dateFormatter.format(new Date(transaction.created_at!))}
+                  </td>
+
+                  <td>
+                    <ButtonViewTransaction>
+                      <Eye />
+                    </ButtonViewTransaction>
                   </td>
                 </tr>
               )

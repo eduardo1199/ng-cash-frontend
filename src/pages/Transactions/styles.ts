@@ -77,3 +77,27 @@ export const RadioItem = styled(RadioGroup.Item)`
   outline: none;
   cursor: default;
 `
+
+export const ButtonViewTransaction = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 8px;
+
+  svg {
+    font-size: 20px;
+    color: ${(props) => props.theme.white};
+  }
+
+  :hover {
+    svg {
+      color: ${(props) => props.theme['green-500']};
+      transition: color 0.2s;
+    }
+  }
+`
