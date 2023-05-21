@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import * as RadioGroup from '@radix-ui/react-radio-group'
+
 export const TransactionsContainer = styled.main`
   width: 100%;
   max-width: 1120px;
@@ -37,4 +39,65 @@ export const PriceHighLight = styled.span<PriceHighLightProps>`
     props.variant === 'income'
       ? props.theme['green-300']
       : props.theme['red-300']};
+`
+
+export const RadioGroupRoot = styled(RadioGroup.Root)`
+  display: flex;
+  width: fit-content;
+  gap: 1rem;
+
+  margin-top: 2rem;
+`
+
+export const Item = styled.div`
+  display: flex;
+
+  align-items: center;
+  gap: 0.5rem;
+
+  button {
+    &[data-state='checked'] {
+      background: ${(props) => props.theme['green-500']};
+    }
+
+    border: none;
+    background: ${(props) => props.theme['gray-600']};
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
+export const RadioItem = styled(RadioGroup.Item)`
+  background: ${(props) => props.theme.white};
+  width: 25px;
+  height: 25px;
+  border-radius: 8px;
+  outline: none;
+  cursor: default;
+`
+
+export const ButtonViewTransaction = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 8px;
+
+  svg {
+    font-size: 20px;
+    color: ${(props) => props.theme.white};
+  }
+
+  :hover {
+    svg {
+      color: ${(props) => props.theme['green-500']};
+      transition: color 0.2s;
+    }
+  }
 `
