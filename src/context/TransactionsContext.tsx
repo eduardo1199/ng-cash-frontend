@@ -50,8 +50,6 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         `transactions/${userId}`,
       )
 
-      console.log('render fetch')
-
       setTransactions(response.data.transactions)
     },
     [userId],
