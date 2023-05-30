@@ -8,7 +8,7 @@ type Transaction = {
   id: string
   type: 'income' | 'outcome'
   amount: number
-  user_id: string | null
+  user_id: string | undefined
   description: string
   category: string | null
   created_at: string
@@ -17,6 +17,7 @@ type Transaction = {
 beforeEach(() => {
   const fetchTransactions = async () => {}
   const createTransaction = async () => {}
+  const createTransference = async () => {}
 
   const transactions: Transaction[] = [
     {
@@ -26,7 +27,7 @@ beforeEach(() => {
       amount: 1500,
       category: 'Entrada',
       created_at: new Date().toISOString(),
-      user_id: null,
+      user_id: undefined,
     },
     {
       id: String(faker.datatype.uuid()),
@@ -35,13 +36,18 @@ beforeEach(() => {
       amount: 200,
       category: 'Poupança',
       created_at: new Date().toISOString(),
-      user_id: null,
+      user_id: undefined,
     },
   ]
 
   render(
     <TransactionContext.Provider
-      value={{ transactions, fetchTransactions, createTransaction }}
+      value={{
+        transactions,
+        fetchTransactions,
+        createTransaction,
+        createTransference,
+      }}
     >
       <Summary />
     </TransactionContext.Provider>,
